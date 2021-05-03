@@ -10,7 +10,6 @@
 # bank operations
 
 # Initializing the system
-import os
 import random
 import database
 from getpass import getpass
@@ -96,10 +95,10 @@ def bank_operation(user):
     selected_option = int(input("What would you like to do? (1) deposit (2) withdrawal (3) Logout (4) Exit \n"))
 
     if selected_option == 1:
-        deposit_operation()
+        deposit_operation(user)
 
     elif selected_option == 2:
-        withdrawal_operation()
+        withdrawal_operation(user)
 
     elif selected_option == 3:
         logout()
@@ -112,12 +111,37 @@ def bank_operation(user):
         bank_operation(user)
 
 
-def withdrawal_operation():
-   pass
+def withdrawal_operation(user):
+    withdrawal_amount = int(input("How much would you like to withdraw \n"))
+    current_balance = int(get_current_balance(user))
+    if withdrawal_amount > current_balance:
+        print("Insufficient funds")
+        return bank_operation(user)
+    current_balance -= withdrawal_amount
+    set_current_balance(user, current_balance)
+    print("New balance: {}".format(get_current_balance(user)))
 
 
-def deposit_operation():
-    pass
+def deposit_operation(user):
+    deposit_amount = int(input("How much would you like to deposit \n"))
+    current_balance = int(get_current_balance(user))
+    current_balance += deposit_amount
+    set_current_balance(user, current_balance)
+    print("New balance: {}".format(get_current_balance(user)))
+    return
+
+
+def complaint_operation():
+    input("What issue would you like to report?")
+    print("Thank you for contacting us")
+
+
+def set_current_balance(user_details, balance):
+    user_details[4] = balance
+
+
+def get_current_balance(user_details):
+    return user_details[4]
 
 
 def generation_account_number():
@@ -127,13 +151,9 @@ def generation_account_number():
 def logout():
     login()
 
-init()
-
 
 def account_number_validation(account_number):
-
     if account_number:
-
         try:
             int(account_number)
 
@@ -146,3 +166,5 @@ def account_number_validation(account_number):
             return False
 
     return False
+
+init()
